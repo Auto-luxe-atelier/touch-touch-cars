@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Touch Touch Detailing</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --blue:#1e90ff;
+  --blue-dark:#1270cc;
+  --blue-glow:rgba(30,144,255,0.2);
+  --bg:#0a0a0f;
+  --surface:#111118;
+  --surface2:#16161f;
+  --surface3:#1c1c28;
+  --border:#1e1e2e;
+  --border-lit:#2a2a40;
+  --text:#eef2ff;
+  --text-muted:#7878a0;
+  --text-dim:#3a3a55;
+  --radius:10px;
+  --tr:0.18s ease;
+}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  padding:0 0 60px;
+  background-image:
+    radial-gradient(ellipse at 30% 0%,rgba(30,144,255,0.08) 0%,transparent 55%),
+    radial-gradient(ellipse at 70% 100%,rgba(30,144,255,0.04) 0%,transparent 50%);
+}
+
+/* ── HERO HEADER ── */
+.hero{
+  background:linear-gradient(180deg,rgba(30,144,255,0.12) 0%,transparent 100%);
+  border-bottom:1px solid var(--border-lit);
+  padding:32px 20px 28px;
+  text-align:center;
+  margin-bottom:24px;
+}
+
+.brand{
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+}
+
+.brand-logo{
+  font-family:'Exo 2',sans-serif;
+  font-size:2.4rem;
+  font-weight:800;
+  letter-spacing:2px;
+  line-height:1;
+}
+
+.brand-logo .touch1{color:var(--text);}
+.brand-logo .touch2{color:var(--blue);}
+
+.brand-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(30,144,255,0.12);
+  border:1px solid rgba(30,144,255,0.25);
+  border-radius:20px;
+  padding:4px 14px;
+  font-size:0.72rem;
+  font-weight:600;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--blue);
+}
+
+.brand-sub{
+  color:var(--text-muted);
+  font-size:0.82rem;
+  letter-spacing:1px;
+}
+
+/* ── CONTAINER ── */
+.container{max-width:720px;margin:0 auto;padding:0 16px;display:flex;flex-direction:column;gap:14px;}
+
+/* ── CARD ── */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;overflow:hidden;
+  transition:border-color var(--tr),box-shadow var(--tr);
+}
+.card:focus-within{
+  border-color:rgba(30,144,255,0.3);
+  box-shadow:0 0 0 1px rgba(30,144,255,0.08),0 8px 32px rgba(0,0,0,0.3);
+}
+
+.card-header{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 20px;
+  background:var(--surface2);
+  border-bottom:1px solid var(--border);
+}
+.card-icon{
+  width:34px;height:34px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+  background:rgba(30,144,255,0.1);
+  border:1px solid rgba(30,144,255,0.2);
+}
+.card-title{
+  font-family:'Exo 2',sans-serif;
+  font-weight:700;font-size:0.88rem;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--blue);
+}
+
+.card-body{padding:20px;display:flex;flex-direction:column;gap:14px;}
+
+/* ── GRID ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:500px){.grid-2{grid-template-columns:1fr;}}
+
+/* ── FIELD ── */
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{
+  font-size:0.72rem;font-weight:600;
+  letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--text-muted);
+}
+.field label .req{color:var(--blue);margin-left:2px;}
+.field label .opt{color:var(--text-dim);font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;}
+
+.field input,.field select,.field textarea{
+  background:var(--surface3);
+  border:1px solid var(--border-lit);
+  border-radius:var(--radius);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:0.93rem;
+  padding:11px 14px;
+  transition:border-color var(--tr),box-shadow var(--tr);
+  width:100%;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px var(--blue-glow);
+}
+.field input::placeholder{color:var(--text-dim);}
+.field select option{background:var(--surface2);}
+
+.field-err{font-size:0.72rem;color:#ff6b6b;display:none;}
+.field-err.show{display:block;}
+.field-hint{font-size:0.72rem;color:var(--text-dim);}
+
+/* ── SERVICES CATÉGORIES ── */
+.cat-title{
+  font-family:'Exo 2',sans-serif;
+  font-size:0.72rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--text-muted);
+  padding:6px 0 8px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:4px;
+  display:flex;align-items:center;gap:8px;
+}
+.cat-title::before{
+  content:'';
+  display:inline-block;
+  width:3px;height:14px;
+  background:var(--blue);
+  border-radius:2px;
+}
+
+.services-list{display:flex;flex-direction:column;gap:6px;}
+
+.svc{
+  background:var(--surface3);
+  border:1px solid var(--border-lit);
+  border-radius:var(--radius);
+  overflow:hidden;
+  transition:border-color var(--tr);
+}
+.svc.active{border-color:var(--blue);}
+
+.svc-hdr{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;cursor:pointer;user-select:none;
+  transition:background var(--tr);
+}
+.svc-hdr:hover{background:rgba(30,144,255,0.04);}
+
+.svc-chk{
+  width:20px;height:20px;min-width:20px;
+  border:2px solid var(--border-lit);
+  border-radius:5px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;color:#000;
+  transition:background var(--tr),border-color var(--tr);
+}
+.svc.active .svc-chk{background:var(--blue);border-color:var(--blue);}
+.svc-chk-ico{opacity:0;transition:opacity var(--tr);}
+.svc.active .svc-chk-ico{opacity:1;}
+
+.svc-lbl{font-size:0.9rem;font-weight:500;flex:1;line-height:1.3;}
+.svc-lbl small{display:block;font-size:0.75rem;color:var(--text-muted);font-weight:400;margin-top:2px;}
+
+.svc-body{
+  display:none;
+  padding:0 14px 12px;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.svc.active .svc-body{display:flex;}
+
+.prix-wrap{position:relative;flex:1;min-width:160px;max-width:220px;}
+.prix-wrap input{
+  background:var(--surface2) !important;
+  border:1px solid var(--border-lit) !important;
+  border-radius:7px !important;
+  color:var(--blue) !important;
+  font-family:'Exo 2',sans-serif !important;
+  font-size:1.1rem !important;font-weight:700 !important;
+  padding:9px 42px 9px 13px !important;
+  width:100% !important;
+  transition:border-color var(--tr) !important;
+}
+.prix-wrap input:focus{border-color:var(--blue) !important;box-shadow:0 0 0 2px var(--blue-glow) !important;outline:none !important;}
+.prix-wrap input::placeholder{color:var(--text-dim) !important;font-size:0.82rem !important;font-weight:400 !important;}
+.prix-wrap .sfx{
+  position:absolute;right:11px;top:50%;transform:translateY(-50%);
+  color:var(--text-muted);font-size:0.76rem;pointer-events:none;
+}
+
+.svc-note{
+  flex:1;min-width:160px;
+}
+.svc-note input{
+  background:var(--surface2) !important;
+  border:1px solid var(--border-lit) !important;
+  border-radius:7px !important;
+  color:var(--text) !important;
+  font-size:0.85rem !important;
+  padding:9px 13px !important;
+  width:100% !important;
+}
+.svc-note input:focus{border-color:var(--blue) !important;outline:none !important;}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;}
+input[type="number"]{-moz-appearance:textfield;}
+
+/* ── TOTAL ── */
+.total-strip{
+  background:linear-gradient(135deg,rgba(30,144,255,0.1),rgba(30,144,255,0.03));
+  border:1px solid rgba(30,144,255,0.2);
+  border-radius:12px;
+  padding:18px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  margin-top:4px;
+}
+.total-info{display:flex;flex-direction:column;gap:3px;}
+.total-lbl{font-size:0.72rem;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;}
+.total-det{font-size:0.8rem;color:var(--text-dim);}
+.total-val{
+  font-family:'Exo 2',sans-serif;
+  font-size:2rem;font-weight:800;
+  color:var(--blue);white-space:nowrap;
+}
+
+/* ── SUBMIT ── */
+.btn-submit{
+  width:100%;padding:16px;
+  background:var(--blue);
+  color:#fff;
+  font-family:'Exo 2',sans-serif;
+  font-size:1.05rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  border:none;border-radius:12px;cursor:pointer;
+  transition:transform var(--tr),box-shadow var(--tr),background var(--tr);
+  box-shadow:0 4px 24px rgba(30,144,255,0.3);
+  margin-top:8px;
+}
+.btn-submit:hover:not(:disabled){
+  background:var(--blue-dark);
+  transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(30,144,255,0.4);
+}
+.btn-submit:disabled{opacity:0.6;cursor:not-allowed;}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--surface2);border:1px solid var(--border-lit);
+  border-radius:var(--radius);padding:12px 20px;
+  font-size:0.9rem;display:flex;align-items:center;gap:9px;
+  box-shadow:0 8px 28px rgba(0,0,0,0.5);z-index:9999;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;
+  opacity:0;white-space:nowrap;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.success{border-left:4px solid #4caf50;}
+.toast.error{border-left:4px solid #ff5555;}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.88);
+  z-index:1000;display:flex;align-items:center;justify-content:center;
+  padding:20px;opacity:0;pointer-events:none;transition:opacity 0.25s;
+}
+.modal-overlay.show{opacity:1;pointer-events:all;}
+.modal{
+  background:var(--surface);border:1px solid var(--border-lit);
+  border-radius:16px;padding:26px;max-width:520px;width:100%;
+  transform:scale(0.93);transition:transform 0.25s;
+  max-height:85vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+}
+.modal-overlay.show .modal{transform:scale(1);}
+.modal-title{
+  font-family:'Exo 2',sans-serif;font-size:1.2rem;font-weight:700;
+  color:var(--blue);letter-spacing:1px;margin-bottom:18px;
+}
+.modal-row{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:7px 0;border-bottom:1px solid var(--border);
+  font-size:0.87rem;gap:12px;
+}
+.modal-row:last-of-type{border-bottom:none;}
+.modal-key{color:var(--text-muted);flex-shrink:0;min-width:110px;}
+.modal-val{text-align:right;color:var(--text);font-weight:500;word-break:break-word;white-space:pre-line;}
+.modal-val.hl{color:var(--blue);font-family:'Exo 2',sans-serif;font-size:1.1rem;font-weight:700;}
+
+.modal-actions{display:flex;gap:10px;margin-top:18px;}
+.modal-actions button{
+  flex:1;padding:11px;border-radius:var(--radius);
+  font-weight:600;font-family:'Exo 2',sans-serif;
+  font-size:0.95rem;letter-spacing:1px;cursor:pointer;border:none;
+  transition:background var(--tr);
+}
+.btn-cancel-m{background:var(--surface3);color:var(--text);border:1px solid var(--border-lit) !important;}
+.btn-cancel-m:hover{border-color:var(--blue) !important;}
+.btn-confirm-m{background:var(--blue);color:#fff;}
+.btn-confirm-m:hover:not(:disabled){background:var(--blue-dark);}
+.btn-confirm-m:disabled{opacity:0.6;cursor:not-allowed;}
+
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;margin-right:7px;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="brand">
+    <div class="brand-logo">
+      <span class="touch1">TOUCH </span><span class="touch2">TOUCH</span>
+    </div>
+    <div class="brand-badge">✦ Detailing ✦</div>
+    <div class="brand-sub">Centre d'esthétique automobile — Réservation</div>
+  </div>
+</div>
+
+<div class="container">
+<form id="form" novalidate>
+
+  <!-- ── VÉHICULE ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🚗</div>
+      <div class="card-title">Véhicule</div>
+    </div>
+    <div class="card-body">
+      <div class="grid-2">
+        <div class="field">
+          <label>Marque <span class="req">*</span></label>
+          <input type="text" id="marque" placeholder="Ex : BMW">
+          <div class="field-err" id="err-marque">Champ obligatoire.</div>
+        </div>
+        <div class="field">
+          <label>Modèle <span class="req">*</span></label>
+          <input type="text" id="modele" placeholder="Ex : X5">
+          <div class="field-err" id="err-modele">Champ obligatoire.</div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Année <span class="req">*</span></label>
+          <input type="number" id="annee" min="1990" max="2030" placeholder="Ex : 2021">
+          <div class="field-err" id="err-annee">Champ obligatoire.</div>
+        </div>
+        <div class="field">
+          <label>Couleur <span class="opt">(facultatif)</span></label>
+          <input type="text" id="couleur" placeholder="Ex : Noir métallisé">
+        </div>
+      </div>
+      <div class="field">
+        <label>Matricule <span class="opt">(facultatif)</span></label>
+        <input type="text" id="matricule" placeholder="Ex : 123456 116 16">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SERVICES ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">✨</div>
+      <div class="card-title">Services & Prix</div>
+    </div>
+    <div class="card-body">
+
+      <!-- CATÉGORIE 1 : CORRECTION -->
+      <div class="cat-title">Correction de peinture</div>
+      <div class="services-list" id="cat-correction"></div>
+
+      <!-- CATÉGORIE 2 : LAVAGE -->
+      <div class="cat-title">Lavage & Nettoyage</div>
+      <div class="services-list" id="cat-lavage"></div>
+
+      <!-- CATÉGORIE 3 : PROTECTION -->
+      <div class="cat-title">Protection & Habillage</div>
+      <div class="services-list" id="cat-protection"></div>
+
+      <div class="field-err" id="err-services">Sélectionnez au moins un service.</div>
+
+      <!-- TOTAL -->
+      <div class="total-strip">
+        <div class="total-info">
+          <div class="total-lbl">Total estimé</div>
+          <div class="total-det" id="total-det">Aucun service sélectionné</div>
+        </div>
+        <div class="total-val" id="total-val">— DA</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── RDV ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">📅</div>
+      <div class="card-title">Rendez-vous</div>
+    </div>
+    <div class="card-body">
+      <div class="grid-2">
+        <div class="field">
+          <label>Date <span class="req">*</span></label>
+          <input type="date" id="daterdv">
+          <div class="field-err" id="err-daterdv">Date obligatoire.</div>
+        </div>
+        <div class="field">
+          <label>Heure <span class="req">*</span></label>
+          <input type="time" id="heure" min="08:00" max="18:00" step="1800">
+          <div class="field-err" id="err-heure">Heure obligatoire.</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Remarques <span class="opt">(facultatif)</span></label>
+        <textarea id="remarques" rows="3" placeholder="Détails supplémentaires, zones particulières à traiter…" style="resize:vertical;"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CLIENT ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">👤</div>
+      <div class="card-title">Client</div>
+    </div>
+    <div class="card-body">
+      <div class="grid-2">
+        <div class="field">
+          <label>Prénom <span class="req">*</span></label>
+          <input type="text" id="prenom" autocomplete="given-name" placeholder="Prénom">
+          <div class="field-err" id="err-prenom">Champ obligatoire.</div>
+        </div>
+        <div class="field">
+          <label>Nom <span class="req">*</span></label>
+          <input type="text" id="nom" autocomplete="family-name" placeholder="Nom">
+          <div class="field-err" id="err-nom">Champ obligatoire.</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Téléphone <span class="req">*</span></label>
+        <input type="tel" id="tel" autocomplete="tel" placeholder="Ex : 05 51 82 51 10">
+        <div class="field-err" id="err-tel">Champ obligatoire.</div>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn-submit" id="btn-submit">
+    ✦ Confirmer la réservation
+  </button>
+
+</form>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-title">✨ Récapitulatif</div>
+    <div id="modal-body"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel-m" id="btn-cancel">Modifier</button>
+      <button class="btn-confirm-m" id="btn-confirm">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toast-icon"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+
+/* ═══════════════════════════════════════════════════════════
+   ✏️  MODIFIER UNIQUEMENT CETTE SECTION POUR CHAQUE CLIENT
+═══════════════════════════════════════════════════════════ */
+
+const CLIENT = {
+  nom: "Touch Touch Detailing",
+  webhookURL: "https://n8n-hetzner.duckdns.org/webhook/CHANGER-ICI",
+  joursFermes: [4, 5], // 4=Jeudi 5=Vendredi
+
+  services: [
+    // ── CORRECTION DE PEINTURE ──
+    { id: "micro_rayures",   cat: "correction", icon: "🔬", label: "Correction micro-rayures",      sub: "Polissage machine — swirl marks" },
+    { id: "rayures_legeres", cat: "correction", icon: "✏️", label: "Correction rayures légères",     sub: "Ponçage fin + polissage" },
+    { id: "rayures_prof",    cat: "correction", icon: "🔧", label: "Remplissage rayures profondes",  sub: "Traitement & comblement" },
+    { id: "lifting",         cat: "correction", icon: "⭐", label: "Lifting complet",                sub: "Décontamination + correction + finition" },
+
+    // ── LAVAGE & NETTOYAGE ──
+    { id: "lavage_complet",  cat: "lavage",     icon: "🫧", label: "Lavage complet int/ext",         sub: "Intérieur + extérieur détaillé" },
+    { id: "lavage_ext",      cat: "lavage",     icon: "💧", label: "Lavage extérieur",               sub: "Carrosserie, jantes, vitres" },
+    { id: "lavage_int",      cat: "lavage",     icon: "🧹", label: "Lavage intérieur",               sub: "Aspirateur, plastiques, cuirs, moquette" },
+
+    // ── PROTECTION & HABILLAGE ──
+    { id: "ceramique",       cat: "protection", icon: "💎", label: "Protection céramique",            sub: "Coating longue durée — hydrophobe" },
+    { id: "ppf",             cat: "protection", icon: "🛡️", label: "Pose PPF",                       sub: "Film de protection peinture" },
+    { id: "covering",        cat: "protection", icon: "🎨", label: "Habillage autocollant",           sub: "Covering total ou partiel", hasNote: true },
+  ]
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NE PAS MODIFIER EN DESSOUS DE CETTE LIGNE
+═══════════════════════════════════════════════════════════ */
+
+document.title = CLIENT.nom
+document.getElementById('daterdv').min = new Date().toISOString().split('T')[0]
+
+document.getElementById('daterdv').addEventListener('change', function() {
+  const d = new Date(this.value + 'T12:00:00')
+  if (CLIENT.joursFermes.includes(d.getDay())) {
+    showToast("Fermé ce jour — choisissez une autre date.", 'error')
+    this.value = ''
+  }
+})
+
+// ── GÉNÉRER SERVICES ──
+const catMap = { correction: 'cat-correction', lavage: 'cat-lavage', protection: 'cat-protection' }
+const svcState = {}
+
+CLIENT.services.forEach(s => {
+  svcState[s.id] = { active: false, prix: '', note: '' }
+
+  const container = document.getElementById(catMap[s.cat])
+  const el = document.createElement('div')
+  el.className = 'svc'
+  el.id = 'svc-' + s.id
+
+  el.innerHTML = `
+    <div class="svc-hdr" id="shdr-${s.id}">
+      <div class="svc-chk"><span class="svc-chk-ico">✓</span></div>
+      <div class="svc-lbl">
+        ${s.icon} ${s.label}
+        ${s.sub ? `<small>${s.sub}</small>` : ''}
+      </div>
+    </div>
+    <div class="svc-body" id="sbody-${s.id}">
+      ${s.hasNote ? `
+        <div class="svc-note">
+          <input type="text" id="snote-${s.id}" placeholder="Préciser (couleur, zone…)">
+        </div>
+      ` : ''}
+      <div class="prix-wrap">
+        <input type="number" id="sprix-${s.id}" min="0" placeholder="Prix">
+        <span class="sfx">DA</span>
+      </div>
+    </div>
+  `
+
+  container.appendChild(el)
+
+  el.querySelector('#shdr-' + s.id).addEventListener('click', () => {
+    svcState[s.id].active = !svcState[s.id].active
+    el.classList.toggle('active', svcState[s.id].active)
+    if (svcState[s.id].active) {
+      setTimeout(() => {
+        const inp = document.getElementById('sprix-' + s.id)
+        if (inp) inp.focus()
+      }, 60)
+    } else {
+      svcState[s.id].prix = ''
+      svcState[s.id].note = ''
+      const pInp = document.getElementById('sprix-' + s.id)
+      if (pInp) pInp.value = ''
+      if (s.hasNote) {
+        const nInp = document.getElementById('snote-' + s.id)
+        if (nInp) nInp.value = ''
+      }
+    }
+    calculTotal()
+  })
+
+  const pInp = document.getElementById('sprix-' + s.id)
+  if (pInp) pInp.addEventListener('input', function() {
+    svcState[s.id].prix = this.value
+    calculTotal()
+  })
+
+  if (s.hasNote) {
+    const nInp = document.getElementById('snote-' + s.id)
+    if (nInp) nInp.addEventListener('input', function() {
+      svcState[s.id].note = this.value
+    })
+  }
+})
+
+function calculTotal() {
+  let total = 0
+  const lignes = []
+
+  CLIENT.services.forEach(s => {
+    if (svcState[s.id].active) {
+      const p = parseFloat(svcState[s.id].prix) || 0
+      if (p > 0) { total += p; lignes.push(p.toLocaleString('fr-DZ') + ' DA') }
+    }
+  })
+
+  const valEl = document.getElementById('total-val')
+  const detEl = document.getElementById('total-det')
+  const actifs = CLIENT.services.filter(s => svcState[s.id].active).length
+
+  if (total > 0) {
+    valEl.textContent = total.toLocaleString('fr-DZ') + ' DA'
+    detEl.textContent = lignes.join(' + ')
+  } else {
+    valEl.textContent = '— DA'
+    detEl.textContent = actifs > 0 ? 'Prix non renseigné' : 'Aucun service sélectionné'
+  }
+}
+
+// ── VALIDATION ──
+function showErr(id, show) {
+  const el = document.getElementById('err-' + id)
+  if (el) show ? el.classList.add('show') : el.classList.remove('show')
+}
+
+function validateForm() {
+  let ok = true
+  const champs = [
+    { id: 'marque',  val: () => document.getElementById('marque').value },
+    { id: 'modele',  val: () => document.getElementById('modele').value },
+    { id: 'annee',   val: () => document.getElementById('annee').value },
+    { id: 'daterdv', val: () => document.getElementById('daterdv').value },
+    { id: 'heure',   val: () => document.getElementById('heure').value },
+    { id: 'prenom',  val: () => document.getElementById('prenom').value },
+    { id: 'nom',     val: () => document.getElementById('nom').value },
+    { id: 'tel',     val: () => document.getElementById('tel').value },
+  ]
+  champs.forEach(c => {
+    const empty = !c.val() || c.val().trim() === ''
+    showErr(c.id, empty)
+    if (empty) ok = false
+  })
+
+  const actifs = CLIENT.services.filter(s => svcState[s.id].active)
+  showErr('services', actifs.length === 0)
+  if (actifs.length === 0) ok = false
+
+  return ok
+}
+
+// ── RECAP ──
+function buildRecap() {
+  const svcListe = CLIENT.services
+    .filter(s => svcState[s.id].active)
+    .map(s => {
+      const p = svcState[s.id].prix ? ' — ' + Number(svcState[s.id].prix).toLocaleString('fr-DZ') + ' DA' : ''
+      const n = s.hasNote && svcState[s.id].note ? ' (' + svcState[s.id].note + ')' : ''
+      return s.icon + ' ' + s.label + n + p
+    }).join('\n')
+
+  const total = CLIENT.services.reduce((acc, s) => {
+    if (svcState[s.id].active) acc += parseFloat(svcState[s.id].prix) || 0
+    return acc
+  }, 0)
+
+  const rows = [
+    ['Véhicule',  document.getElementById('marque').value + ' ' + document.getElementById('modele').value + ' ' + document.getElementById('annee').value],
+    ['Couleur',   document.getElementById('couleur').value || '—'],
+    ['Matricule', document.getElementById('matricule').value || '—'],
+    ['Services',  svcListe],
+    ['Total',     total > 0 ? total.toLocaleString('fr-DZ') + ' DA' : '—', true],
+    ['Date RDV',  document.getElementById('daterdv').value],
+    ['Heure',     document.getElementById('heure').value],
+    ['Remarques', document.getElementById('remarques').value || '—'],
+    ['Prénom',    document.getElementById('prenom').value],
+    ['Nom',       document.getElementById('nom').value],
+    ['Téléphone', document.getElementById('tel').value],
+  ]
+
+  document.getElementById('modal-body').innerHTML = rows.map(([k, v, hl]) =>
+    `<div class="modal-row">
+      <span class="modal-key">${k}</span>
+      <span class="modal-val${hl ? ' hl' : ''}">${v}</span>
+    </div>`
+  ).join('')
+}
+
+const modalOverlay = document.getElementById('modal-overlay')
+const btnCancel    = document.getElementById('btn-cancel')
+const btnConfirm   = document.getElementById('btn-confirm')
+
+function openModal()  { buildRecap(); modalOverlay.classList.add('show') }
+function closeModal() {
+  modalOverlay.classList.remove('show')
+  btnConfirm.disabled = false
+  btnConfirm.textContent = 'Confirmer'
+}
+
+btnCancel.addEventListener('click', closeModal)
+modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal() })
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal() })
+
+document.getElementById('form').addEventListener('submit', function(e) {
+  e.preventDefault()
+  if (!validateForm()) { showToast('Veuillez corriger les champs manquants.', 'error'); return }
+  openModal()
+})
+
+btnConfirm.addEventListener('click', async function() {
+  btnConfirm.disabled = true
+  btnConfirm.innerHTML = '<span class="spinner"></span>Envoi…'
+  closeModal()
+  document.getElementById('btn-submit').disabled = true
+  document.getElementById('btn-submit').innerHTML = '<span class="spinner"></span>Envoi en cours…'
+
+  const servicesData = CLIENT.services
+    .filter(s => svcState[s.id].active)
+    .map(s => ({
+      service: s.label,
+      note: s.hasNote ? svcState[s.id].note : '',
+      prix: svcState[s.id].prix || '0'
+    }))
+
+  const total = servicesData.reduce((acc, s) => acc + parseFloat(s.prix || 0), 0)
+
+  const data = {
+    marque:    document.getElementById('marque').value,
+    modele:    document.getElementById('modele').value,
+    annee:     document.getElementById('annee').value,
+    couleur:   document.getElementById('couleur').value || '',
+    matricule: document.getElementById('matricule').value || '',
+    services:  servicesData,
+    total:     total,
+    date_rdv:  document.getElementById('daterdv').value,
+    heure:     document.getElementById('heure').value,
+    remarques: document.getElementById('remarques').value || '',
+    prenom:    document.getElementById('prenom').value,
+    nom:       document.getElementById('nom').value,
+    telephone: document.getElementById('tel').value,
+  }
+
+  try {
+    const res = await fetch(CLIENT.webhookURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    if (!res.ok) throw new Error('Erreur ' + res.status)
+    showToast('Réservation confirmée ✅', 'success')
+
+    document.getElementById('form').reset()
+    CLIENT.services.forEach(s => {
+      svcState[s.id] = { active: false, prix: '', note: '' }
+      document.getElementById('svc-' + s.id).classList.remove('active')
+      const pInp = document.getElementById('sprix-' + s.id)
+      if (pInp) pInp.value = ''
+      if (s.hasNote) {
+        const nInp = document.getElementById('snote-' + s.id)
+        if (nInp) nInp.value = ''
+      }
+    })
+    calculTotal()
+
+  } catch(err) {
+    showToast("Erreur lors de l'envoi.", 'error')
+    console.error(err)
+  } finally {
+    document.getElementById('btn-submit').disabled = false
+    document.getElementById('btn-submit').textContent = '✦ Confirmer la réservation'
+    btnConfirm.disabled = false
+    btnConfirm.textContent = 'Confirmer'
+  }
+})
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast')
+  document.getElementById('toast-icon').textContent = type === 'success' ? '✅' : '❌'
+  document.getElementById('toast-msg').textContent = msg
+  t.className = 'toast ' + type
+  t.classList.add('show')
+  setTimeout(() => t.classList.remove('show'), 4000)
+}
+
+</script>
+</body>
+</html>
