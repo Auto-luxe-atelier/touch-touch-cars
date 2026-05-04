@@ -430,6 +430,10 @@ input[type="number"]{-moz-appearance:textfield;}
       <div class="cat-title">Protection & Habillage</div>
       <div class="services-list" id="cat-protection"></div>
 
+      <!-- CATÉGORIE 4 : PEINTURE & CARROSSERIE -->
+      <div class="cat-title">Peinture & Carrosserie</div>
+      <div class="services-list" id="cat-peinture"></div>
+
       <div class="field-err" id="err-services">Sélectionnez au moins un service.</div>
 
       <!-- TOTAL -->
@@ -548,7 +552,14 @@ const CLIENT = {
     // ── PROTECTION & HABILLAGE ──
     { id: "ceramique",       cat: "protection", icon: "💎", label: "Protection céramique",            sub: "Coating longue durée — hydrophobe" },
     { id: "ppf",             cat: "protection", icon: "🛡️", label: "Pose PPF",                       sub: "Film de protection peinture" },
+    { id: "ppf_msk_av",      cat: "protection", icon: "🛡️", label: "PPF Masque avant",                  sub: "Masking partiel face avant" },
     { id: "covering",        cat: "protection", icon: "🎨", label: "Habillage autocollant",           sub: "Covering total ou partiel", hasNote: true },
+
+    // ── PEINTURE & CARROSSERIE ──
+    { id: "raccord_peinture",     cat: "peinture", icon: "🖌️", label: "Raccord peinture",            sub: "Retouche & raccord localisé", hasNote: true },
+    { id: "peinture_parchok_av",  cat: "peinture", icon: "🚙", label: "Peinture parchoc avant",      sub: "Mise en peinture pare-choc avant" },
+    { id: "peinture_parchok_ar",  cat: "peinture", icon: "🚘", label: "Peinture parchoc arrière",    sub: "Mise en peinture pare-choc arrière" },
+    { id: "peinture_etrier",      cat: "peinture", icon: "🛞", label: "Peinture étriers de frein",   sub: "Préparation + peinture haute température", hasNote: true },
   ]
 }
 
@@ -568,7 +579,7 @@ document.getElementById('daterdv').addEventListener('change', function() {
 })
 
 // ── GÉNÉRER SERVICES ──
-const catMap = { correction: 'cat-correction', lavage: 'cat-lavage', protection: 'cat-protection' }
+const catMap = { correction: 'cat-correction', lavage: 'cat-lavage', protection: 'cat-protection', peinture: 'cat-peinture' }
 const svcState = {}
 
 CLIENT.services.forEach(s => {
